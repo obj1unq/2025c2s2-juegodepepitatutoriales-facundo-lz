@@ -6,9 +6,11 @@ program pepitaGame {
 	game.height(10) 		//valor por defecto 5
 	game.width(10) 			//valor por defecto 5
 	game.cellSize(50) 		//valor por defecto 50
-	//search assets in assets folder, for example, for the background
-	//Valor por defecto game.ground("ground.png")
 	
-	//game.addVisual(pepita)
+	game.addVisualCharacter(pepita)
+	game.addVisual(silvestre)
+	game.boardGround("fondo.jpg")
+	keyboard.left().onPressDo ({silvestre.moverIzquierda()})
+	keyboard.right().onPressDo ({silvestre.moverDerecha()})
 	game.start()	
 }
