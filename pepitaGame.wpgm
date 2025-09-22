@@ -9,8 +9,10 @@ program pepitaGame {
 	
 	game.addVisualCharacter(pepita)
 	game.addVisual(silvestre)
+	game.addVisual(nido)
 	game.boardGround("fondo.jpg")
-	keyboard.left().onPressDo ({silvestre.moverIzquierda()})
-	keyboard.right().onPressDo ({silvestre.moverDerecha()})
-	game.start()	
+	game.onTick (500, "Silvestre persigue a pepita", {=> silvestre.perseguir(pepita) pepita.colisionarConPersonaje(silvestre)})
+	keyboard.right().onPressDo({pepita.volar()})
+	keyboard.left().onPressDo({pepita.volar()})
+	game.start()
 }
