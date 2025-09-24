@@ -1,18 +1,17 @@
+import direcciones.*
 object pepita {
 	var property position = game.center()
 	var energia = 500
 	var image = "pepita.png"
+	const objetivo = nido
+	const perseguidor = silvestre
 
 	method comer(comida) {
 		energia = energia + comida.energiaQueOtorga()
 	}
 
 	method volar() {
-		if (energia == 0){
-			image = "pepita-gris.png"
-		} else {
-			energia = 0.max(energia - 9)
-		}
+		energia = 0.max(energia - 9)
 	}
 	
 	method energia() {
@@ -23,23 +22,38 @@ object pepita {
 		return image
 	}
 
-	method colisionarConPersonaje(personaje){
-		if (position == personaje.position()){
-			image = "pepita-gris.png"
+	method mover(direccion){
+		if (energia > 0 and !self.ganoElJuego() and position != perseguidor.position()){
+			position = direccion.siguiente(position)
+			self.volar()
 		} else {
-			image = "pepita.png"
+			self.cambiarImagen()
+		}
+	}
+
+	method ganoElJuego(){
+		return position == objetivo.position()
+	}
+
+	method cambiarImagen(){
+		if (self.ganoElJuego()){
+			image = "pepita-grande.png"
+		} else {
+			image = "pepita-gris.png"
 		}
 	}
 }
 
 object silvestre{
-	var property position = game.at(0,2)
+	var property position = game.at(0,3)
 
 	method perseguir (personaje){
-		if (position.x() > personaje.position().x()){
-			position = position.left(1)
-		} else if (position.x() < personaje.position().x()){
-			position = position.right(1)
+		if (personaje.position().x() >= 3 and personaje.position() != position){
+			if (position.x() > personaje.position().x()){
+				position = position.left(1)
+			} else {
+				position = position.right(1)
+			}
 		}
 	}
 
