@@ -4,18 +4,11 @@ object pepita {
 	var property position = game.center()
 	var energia = 500
 	var image = "pepita.png"
-	const objetivo = nido
-	const perseguidor = silvestre
 	
-	method comer() {
-		if (self.puedeComer(manzana)){
-			energia = energia + alpiste.energiaQueOtorga()
-			game.say(self, energia.toString())
-		}
-		if (self.puedeComer(alpiste)){
-			energia = energia + alpiste.energiaQueOtorga()
-			game.say(self, energia.toString())
-		}
+	method comer(alimento) {
+		energia += alimento.energiaQueOtorga()
+		game.removeVisual(alimento)
+		game.say(self, "Ñam ñam")
 	}
 
 	method volar() {
@@ -31,41 +24,28 @@ object pepita {
 	}
 
 	method descender(){
-		if (!self.puedeMoverse()){
-			position = abajo.siguiente(position)
-		}
+		position = abajo.siguiente(position)
 	}
 
 	method mover(direccion){
-		if (!self.puedeMoverse()){
+		if (energia != 0){
 			position = direccion.siguiente(position)
 			self.volar()
-			self.comer()
-		} else {
-			self.cambiarImagen()
 		}
 	}
 
-	method ganoElJuego(){
-		return position == objetivo.position()
+	method ganar(){
+		image = "pepita-grande.png"
+		energia = 0
+		game.say(self, "!GANE!")
+		game.schedule(2000, {game.stop()})
 	}
 
-	method cambiarImagen(){
-		if (self.ganoElJuego()){
-			image = "pepita-grande.png"
-			game.say(self, "!GANE!")
-		} else {
-			image = "pepita-gris.png"
-			game.say(self, "!PERDI!")
-		}
-	}
-
-	method puedeMoverse(){
-		return energia == 0 or self.ganoElJuego() or position == perseguidor.position()
-	}
-
-	method puedeComer(comida){
-		return position == comida.position()
+	method perder(){
+		image = "pepita-gris.png"
+		energia = 0
+		game.say(self, "!PERDI!")
+		game.schedule(2000, {game.stop()})
 	}
 }
 
@@ -92,5 +72,18 @@ object nido{
 
 	method image(){
 		return "nido.png"
+	}
+}
+
+
+object muro{
+	const position = game.at(2,2)
+
+	method image (){
+		return "muro.png"
+	}
+
+	method position(){
+		return position
 	}
 }
